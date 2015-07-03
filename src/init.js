@@ -1,6 +1,6 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {preload: preload, create: create, update: update});
 
-var score = 0;
+var cratesCollected = 0;
 var scoreText;
 
 function getRandRange(min, max) {
@@ -19,7 +19,7 @@ function create() {
 
     // Get starting point.
     var startX = getRandRange(50, game.world.width - 50);
-    var startY = getRandRange(50, game.world.height - 50);
+    var startY = getRandRange(100, game.world.height - 50);
 
     // Crates.
     crate = game.add.sprite(200, 200, 'crate');
@@ -46,7 +46,7 @@ function create() {
     player.body.gravity.y = 0;
     player.body.gravity.x = 0;
 
-    scoreText = game.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#fff'});
+    scoreText = game.add.text(16, 16, 'Crates Collected: 0', {fontSize: '20px', fill: '#fff'});
 }
 
 var carryingCrate = false;
@@ -59,6 +59,8 @@ function hitCrate(player, crate) {
         isFirst = false;
     }
 
+    // Crate Collected.
+    // TODO keep velocity low to pick up.
     if (Date.now() - hitTime >= 2000) {
         crate.x = -100;
         crate.y = -100;
@@ -79,16 +81,20 @@ function dropCrate() {
         isFirstAirpad = false;
     }
 
+    // Crate Delivered.
+    // TODO keep velocity low to deliver.
     if (Date.now() - landTime >= 2000) {
-        crate.x = getRandRange(50, game.world.width - 50);;
-        crate.y = getRandRange(50, game.world.height - 50);;
+        // TODO ensure crate is not under landing pad.
+        crate.x = getRandRange(50, game.world.width - 50);
+        crate.y = getRandRange(100, game.world.height - 50);
         carryingCrate = false;
+        cratesCollected++;
+        scoreText.text = 'Crates Collected: ' + cratesCollected;
     }
 }
 function missPad(player, crate) {
     isFirstAirpad = true;
 }
-
 
 function update() {
 
