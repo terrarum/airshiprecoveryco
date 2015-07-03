@@ -1,0 +1,23 @@
+{
+  "name": "thegame",
+  "version": "0.0.1",
+  "authors": [
+    "James Fidler <terrarum@gmail.com>"
+  ],
+  "description": "phaser.io game",
+  "main": "index.html",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "phaser": "~2.3.0"
+  }
+}
