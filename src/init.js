@@ -1,3 +1,6 @@
+var COLLECT_TIME = 4000;
+var DROP_TIME = 2000;
+
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {preload: preload, create: create, update: update});
 
 var cratesCollected = 0;
@@ -14,6 +17,7 @@ function preload() {
 }
 
 function create() {
+
     // World.
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -28,20 +32,28 @@ function create() {
 
     // Airpad.
     airpad = game.add.sprite(0, 0, 'airpad');
-    airpad.x = startX - airpad.width / 2;
-    airpad.y = startY - airpad.height / 2;
+    airpad.x = startX;
+    airpad.y = startY;
+    airpad.anchor.setTo(0.5, 0.5);;
     game.physics.arcade.enable(airpad);
     airpad.body.immovable = true;
 
     // Player.
     player = game.add.sprite(0, 0, 'airship');
-    player.x = startX - player.width / 2;
-    player.y = startY - player.height / 2;
-
+    player.x = startX;
+    player.y = startY;
     game.physics.arcade.enable(player);
-
     player.body.collideWorldBounds = true;
+    player.anchor.setTo(0.5, 0.5);
+    // Player bar.
+    bmd = game.add.bitmapData(100, 5);
+    bmd.ctx.fillStyle = '#ffffff';
+    bmd.ctx.fillRect(0, 0, 100, 5)
+    playerBar = game.add.sprite(0, 0, bmd);
+    playerBar.anchor.setTo(0.5, 0.5);
+    playerBar.exists = false;
 
+    // Wind.
     // Need to set this randomly.
     player.body.gravity.y = 0;
     player.body.gravity.x = 0;
@@ -52,19 +64,48 @@ function create() {
 var carryingCrate = false;
 var hitTime = 0;
 var isFirst = true;
+var isFirstAirpad = true;
+var landTime = 0;
+
+var progressStartTime;
+var completeTime;
+var maxWidth;
+function playerBarShow(startTime, count) {
+    playerBar.exists = true;
+    maxWidth = playerBar.width;
+    progressStartTime = startTime;
+    completeTime = startTime + count;
+    console.log(startTime, completeTime, count)
+}
+function playerBarUpdate(count) {
+    var width = playerBar.width;
+    var remaining = completeTime - Date.now();
+    var percent = remaining / count;
+    if (percent < 0) percent = 0;
+    playerBar.width = maxWidth * percent;
+}
+function playerBarHide() {
+    playerBar.exists = false;
+    playerBar.width = maxWidth;
+}
+
 function hitCrate(player, crate) {
     // If this is the first hit, store the time.
     if (isFirst) {
         hitTime = Date.now();
         isFirst = false;
+        playerBarShow(hitTime, COLLECT_TIME);
     }
+
+    playerBarUpdate(COLLECT_TIME);
 
     // Crate Collected.
     // TODO keep velocity low to pick up.
-    if (Date.now() - hitTime >= 2000) {
+    if (Date.now() - hitTime >= COLLECT_TIME) {
         crate.x = -100;
         crate.y = -100;
         carryingCrate = true;
+        playerBarHide();
     }
 }
 function missCrate(player, crate) {
@@ -72,24 +113,26 @@ function missCrate(player, crate) {
 }
 
 // Drop crate at airpad.
-var isFirstAirpad = true;
-var landTime = 0;
 function dropCrate() {
     // If this is the first hit, store the time.
     if (isFirstAirpad) {
         landTime = Date.now();
         isFirstAirpad = false;
+        playerBarShow(landTime, DROP_TIME);
     }
+
+    playerBarUpdate(DROP_TIME);
 
     // Crate Delivered.
     // TODO keep velocity low to deliver.
-    if (Date.now() - landTime >= 2000) {
+    if (Date.now() - landTime >= DROP_TIME) {
         // TODO ensure crate is not under landing pad.
         crate.x = getRandRange(50, game.world.width - 50);
         crate.y = getRandRange(100, game.world.height - 50);
         carryingCrate = false;
         cratesCollected++;
         scoreText.text = 'Crates Collected: ' + cratesCollected;
+        playerBarHide();
     }
 }
 function missPad(player, crate) {
@@ -97,6 +140,9 @@ function missPad(player, crate) {
 }
 
 function update() {
+
+    playerBar.x = player.x;
+    playerBar.y = player.y + 50;
 
     // See if airship is over crate.
     var didHitCrate = game.physics.arcade.overlap(player, crate, null, null, this);
