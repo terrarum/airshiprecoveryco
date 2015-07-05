@@ -4,6 +4,7 @@
   "description": "A Phaser game.",
   "author": "James Fidler <terrarum@gmail.com",
   "scripts": {
+    "predeploy": "bower install",
     "start": "node server.js"
   },
   "repository": {
