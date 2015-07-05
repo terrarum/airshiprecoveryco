@@ -1,10 +1,15 @@
 var COLLECT_TIME = 4000;
 var DROP_TIME = 2000;
+var VELOCITY_TOLERANCE = 20;
+
+var $ = require("../bower_components/jquery/dist/jquery");
+window.$ = $;
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {preload: preload, create: create, update: update});
 
 var cratesCollected = 0;
 var scoreText;
+var absVelC = 0;
 
 function getRandRange(min, max) {
     return Math.random() * (max - min) + min;
@@ -78,6 +83,12 @@ function playerBarShow(startTime, count) {
     console.log(startTime, completeTime, count)
 }
 function playerBarUpdate(count) {
+    if (absVelC >= VELOCITY_TOLERANCE) {
+        playerBarHide();
+        missCrate();
+        missPad();
+        return;
+    }
     var width = playerBar.width;
     var remaining = completeTime - Date.now();
     var percent = remaining / count;
@@ -195,4 +206,22 @@ function update() {
     if (cursors.right.isDown) {
         velocity.x += moveRate;
     }
+
+    var absVelX = Math.abs(velocity.x);
+    var absVelY = Math.abs(velocity.y);
+    absVelC = absVelX + absVelY;
+
+    $(".js-velocity-x").html(absVelX);
+    $(".js-velocity-y").html(absVelY);
+    $(".js-velocity-c").html(absVelC);
+
+    if (absVelC >= VELOCITY_TOLERANCE && !$(".js-velocity-c").hasClass("over")) {
+        console.log("over")
+        $(".js-velocity-c").addClass("over");
+    }
+    else if (absVelC < VELOCITY_TOLERANCE && $(".js-velocity-c").hasClass("over")) {
+        console.log("under")
+        $(".js-velocity-c").removeClass("over");
+    }
+
 }
