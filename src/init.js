@@ -1,6 +1,8 @@
 var COLLECT_TIME = 4000;
 var DROP_TIME = 2000;
-var VELOCITY_TOLERANCE = 2;
+var VELOCITY_TOLERANCE = 20;
+
+var MAX_VELOCITY = 100
 
 var $ = require("../bower_components/jquery/dist/jquery");
 window.$ = $;
@@ -60,8 +62,8 @@ function create() {
 
     // Wind.
     // Need to set this randomly.
-    player.body.gravity.y = 0;
-    player.body.gravity.x = 0;
+    player.body.gravity.y = 50;
+    player.body.gravity.x = -80;
 
     scoreText = game.add.text(16, 16, 'Crates Collected: 0', {fontSize: '20px', fill: '#fff'});
 }
@@ -197,6 +199,20 @@ function update() {
         velocity.y += moveRate / 4;
     }
 
+    // Set maximum velocity.
+    if (velocity.x > MAX_VELOCITY + player.body.gravity.x) {
+        velocity.x = MAX_VELOCITY + player.body.gravity.x;
+    }
+    if (velocity.x < -MAX_VELOCITY + player.body.gravity.x) {
+        velocity.x = -MAX_VELOCITY + player.body.gravity.x;
+    }
+    if (velocity.y > MAX_VELOCITY + player.body.gravity.y) {
+        velocity.y = MAX_VELOCITY + player.body.gravity.y;
+    }
+    if (velocity.y < -MAX_VELOCITY + player.body.gravity.y) {
+        velocity.y = -MAX_VELOCITY + player.body.gravity.y;
+    }
+
     // Move airship with arrow keys.
     if (cursors.up.isDown) {
         velocity.y -= moveRate;
@@ -215,9 +231,9 @@ function update() {
     var absVelY = Math.abs(velocity.y);
     absVelC = absVelX + absVelY;
 
-    $(".js-velocity-x").html(absVelX);
-    $(".js-velocity-y").html(absVelY);
-    $(".js-velocity-c").html(absVelC);
+    $(".js-velocity-x").html(absVelX.toFixed(2));
+    $(".js-velocity-y").html(absVelY.toFixed(2));
+    $(".js-velocity-c").html(absVelC.toFixed(2));
 
     if (absVelC >= VELOCITY_TOLERANCE && !$(".js-velocity-c").hasClass("over")) {
         $(".js-velocity-c").addClass("over");
