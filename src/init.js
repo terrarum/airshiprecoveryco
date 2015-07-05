@@ -31,11 +31,6 @@ function create() {
     var startX = getRandRange(50, game.world.width - 50);
     var startY = getRandRange(100, game.world.height - 50);
 
-    // Crates.
-    crate = game.add.sprite(200, 200, 'crate');
-    game.physics.arcade.enable(crate);
-    crate.body.immovable = true;
-
     // Airpad.
     airpad = game.add.sprite(0, 0, 'airpad');
     airpad.x = startX;
@@ -43,6 +38,11 @@ function create() {
     airpad.anchor.setTo(0.5, 0.5);;
     game.physics.arcade.enable(airpad);
     airpad.body.immovable = true;
+
+    // Crate.
+    crate = game.add.sprite(200, 200, 'crate');
+    game.physics.arcade.enable(crate);
+    crate.body.immovable = true;
 
     // Player.
     player = game.add.sprite(0, 0, 'airship');
@@ -60,6 +60,8 @@ function create() {
     playerBar.exists = false;
 
     scoreText = game.add.text(16, 16, 'Crates Collected: 0', {fontSize: '20px', fill: '#fff'});
+
+    graphics = game.add.graphics(0, 0);
 }
 
 var carryingCrate = false;
@@ -151,7 +153,7 @@ function missPad(player, crate) {
 }
 
 // Calculates the wind strength and direction.
-lifespan = 10000
+lifespan = 5000
 function wind() {
     // Update lifespan of wind.
     lifespan -= game.time.physicsElapsedMS;
@@ -162,6 +164,12 @@ function wind() {
         player.body.gravity.x = getRandRange(-80, 80);
         player.body.gravity.y = getRandRange(-80, 80);
     }
+
+    graphics.clear();
+    graphics.beginFill(0xFF3300);
+    graphics.lineStyle(5, 0xffd900, 1);
+    graphics.moveTo(750, 50);
+    graphics.lineTo(750 + player.body.gravity.x / 2, 50 + player.body.gravity.y / 2);
 }
 
 function update() {
