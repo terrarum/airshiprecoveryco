@@ -24,7 +24,6 @@ function preload() {
 }
 
 function create() {
-
     // World.
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -59,11 +58,6 @@ function create() {
     playerBar = game.add.sprite(0, 0, bmd);
     playerBar.anchor.setTo(0.5, 0.5);
     playerBar.exists = false;
-
-    // Wind.
-    // Need to set this randomly.
-    player.body.gravity.y = 50;
-    player.body.gravity.x = -80;
 
     scoreText = game.add.text(16, 16, 'Crates Collected: 0', {fontSize: '20px', fill: '#fff'});
 }
@@ -156,7 +150,23 @@ function missPad(player, crate) {
     }
 }
 
+// Calculates the wind strength and direction.
+lifespan = 10000
+function wind() {
+    // Update lifespan of wind.
+    lifespan -= game.time.physicsElapsedMS;
+
+    // Generate new wind.
+    if (lifespan <= 0) {
+        lifespan = getRandRange(1000, 10000)
+        player.body.gravity.x = getRandRange(-80, 80);
+        player.body.gravity.y = getRandRange(-80, 80);
+    }
+}
+
 function update() {
+
+    wind();
 
     playerBar.x = player.x;
     playerBar.y = player.y + 50;
@@ -231,8 +241,8 @@ function update() {
     var absVelY = Math.abs(velocity.y);
     absVelC = absVelX + absVelY;
 
-    $(".js-velocity-x").html(absVelX.toFixed(2));
-    $(".js-velocity-y").html(absVelY.toFixed(2));
+    // Print stats to screen.
+    $(".js-lifespan").html((lifespan / 1000).toFixed(1));
     $(".js-velocity-c").html(absVelC.toFixed(2));
 
     if (absVelC >= VELOCITY_TOLERANCE && !$(".js-velocity-c").hasClass("over")) {
