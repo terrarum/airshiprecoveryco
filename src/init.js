@@ -58,6 +58,11 @@ function create() {
     playerBar = game.add.sprite(0, 0, bmd);
     playerBar.anchor.setTo(0.5, 0.5);
     playerBar.exists = false;
+    // Player fuel.
+    player.fuelCapacity = 1000;
+    player.fuelCurrent = player.fuelCapacity;
+    player.fuelConsumptionRate = 100; // units per second?
+    player.fuelRefuelRate = 400;
 
     scoreText = game.add.text(16, 16, 'Crates Collected: 0', {fontSize: '20px', fill: '#fff'});
 
@@ -178,6 +183,11 @@ function wind() {
     graphics.endFill();
 }
 
+function consumeFuel() {
+    player.fuelCurrent -= player.fuelConsumptionRate / game.time.physicsElapsedMS;
+    if (player.fuelCurrent < 0) player.fuelCurrent = 0;
+}
+
 function update() {
 
     wind();
@@ -238,17 +248,23 @@ function update() {
     }
 
     // Move airship with arrow keys.
-    if (cursors.up.isDown) {
-        velocity.y -= moveRate;
-    }
-    if (cursors.down.isDown) {
-        velocity.y += moveRate;
-    }
-    if (cursors.left.isDown) {
-        velocity.x -= moveRate;
-    }
-    if (cursors.right.isDown) {
-        velocity.x += moveRate;
+    if (player.fuelCurrent > 0) {
+        if (cursors.up.isDown) {
+            consumeFuel();
+            velocity.y -= moveRate;
+        }
+        if (cursors.down.isDown) {
+            consumeFuel();
+            velocity.y += moveRate;
+        }
+        if (cursors.left.isDown) {
+            consumeFuel();
+            velocity.x -= moveRate;
+        }
+        if (cursors.right.isDown) {
+            consumeFuel();
+            velocity.x += moveRate;
+        }
     }
 
     var absVelX = Math.abs(velocity.x);
@@ -258,6 +274,8 @@ function update() {
     // Print stats to screen.
     $(".js-lifespan").html((lifespan / 1000).toFixed(1));
     $(".js-velocity-c").html(absVelC.toFixed(2));
+    $(".js-fuelCurrent").html(player.fuelCurrent.toFixed(0));
+    $(".js-fuelCapacity").html(player.fuelCapacity.toFixed(0));
 
     if (absVelC >= VELOCITY_TOLERANCE && !$(".js-velocity-c").hasClass("over")) {
         $(".js-velocity-c").addClass("over");
