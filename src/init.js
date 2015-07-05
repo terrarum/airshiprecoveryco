@@ -1,6 +1,6 @@
 var COLLECT_TIME = 4000;
 var DROP_TIME = 2000;
-var VELOCITY_TOLERANCE = 20;
+var VELOCITY_TOLERANCE = 2;
 
 var $ = require("../bower_components/jquery/dist/jquery");
 window.$ = $;
@@ -74,19 +74,19 @@ var landTime = 0;
 
 var progressStartTime;
 var completeTime;
-var maxWidth;
+var maxWidth = 100;
 function playerBarShow(startTime, count) {
     playerBar.exists = true;
     maxWidth = playerBar.width;
     progressStartTime = startTime;
     completeTime = startTime + count;
-    console.log(startTime, completeTime, count)
 }
 function playerBarUpdate(count) {
     if (absVelC >= VELOCITY_TOLERANCE) {
-        playerBarHide();
-        missCrate();
-        missPad();
+
+        count += game.time.physicsElapsedMS;
+        // Holds the progress bar.
+        completeTime += game.time.physicsElapsedMS;
         return;
     }
     var width = playerBar.width;
@@ -111,8 +111,7 @@ function hitCrate(player, crate) {
     playerBarUpdate(COLLECT_TIME);
 
     // Crate Collected.
-    // TODO keep velocity low to pick up.
-    if (Date.now() - hitTime >= COLLECT_TIME) {
+    if (Date.now() >= completeTime) {
         crate.x = -100;
         crate.y = -100;
         carryingCrate = true;
@@ -121,6 +120,9 @@ function hitCrate(player, crate) {
 }
 function missCrate(player, crate) {
     isFirst = true;
+    if (!carryingCrate) {
+        playerBarHide();
+    }
 }
 
 // Drop crate at airpad.
@@ -135,8 +137,7 @@ function dropCrate() {
     playerBarUpdate(DROP_TIME);
 
     // Crate Delivered.
-    // TODO keep velocity low to deliver.
-    if (Date.now() - landTime >= DROP_TIME) {
+    if (Date.now() >= completeTime) {
         // TODO ensure crate is not under landing pad.
         crate.x = getRandRange(50, game.world.width - 50);
         crate.y = getRandRange(100, game.world.height - 50);
@@ -148,6 +149,9 @@ function dropCrate() {
 }
 function missPad(player, crate) {
     isFirstAirpad = true;
+    if (carryingCrate) {
+        playerBarHide();
+    }
 }
 
 function update() {
@@ -216,11 +220,9 @@ function update() {
     $(".js-velocity-c").html(absVelC);
 
     if (absVelC >= VELOCITY_TOLERANCE && !$(".js-velocity-c").hasClass("over")) {
-        console.log("over")
         $(".js-velocity-c").addClass("over");
     }
     else if (absVelC < VELOCITY_TOLERANCE && $(".js-velocity-c").hasClass("over")) {
-        console.log("under")
         $(".js-velocity-c").removeClass("over");
     }
 
