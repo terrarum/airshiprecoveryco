@@ -154,6 +154,7 @@ function missPad(player, crate) {
 
 // Calculates the wind strength and direction.
 lifespan = 5000
+
 function wind() {
     // Update lifespan of wind.
     lifespan -= game.time.physicsElapsedMS;
@@ -165,11 +166,16 @@ function wind() {
         player.body.gravity.y = getRandRange(-80, 80);
     }
 
+    // Draw wind indicator.
     graphics.clear();
-    graphics.beginFill(0xFF3300);
     graphics.lineStyle(5, 0xffd900, 1);
+    graphics.beginFill(0xFFFF0B, 0.5);
+    graphics.drawCircle(750, 50, 84);
+    graphics.endFill();
+    graphics.beginFill(0xFF3300);
     graphics.moveTo(750, 50);
     graphics.lineTo(750 + player.body.gravity.x / 2, 50 + player.body.gravity.y / 2);
+    graphics.endFill();
 }
 
 function update() {
