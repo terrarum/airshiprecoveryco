@@ -1,0 +1,21 @@
+{
+  "name": "airshiprecoveryco",
+  "version": "0.0.1",
+  "description": "A Phaser game.",
+  "author": "James Fidler <terrarum@gmail.com",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/terrarum/airshiprecoveryco.org"
+  },
+  "dependencies": {
+    "connect": "^3.4.0",
+    "serve-static": "^1.10.0"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "watchify": "^3.2.3"
+  }
+}
