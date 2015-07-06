@@ -184,8 +184,8 @@ function wind() {
 }
 
 function consumeFuel() {
-    player.fuelCurrent -= player.fuelConsumptionRate / game.time.physicsElapsedMS;
-    if (player.fuelCurrent < 0) player.fuelCurrent = 0;
+    //player.fuelCurrent -= player.fuelConsumptionRate / game.time.physicsElapsedMS;
+    //if (player.fuelCurrent < 0) player.fuelCurrent = 0;
 }
 
 function update() {
