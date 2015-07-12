@@ -2,8 +2,9 @@
  * Generic Entity class. Extends Phaser.Sprite.
  */
 
-var Entity = function(game, x, y, sprite, update){
-    Phaser.Sprite.call(this, game, x, y, sprite);
+var Entity = function(position, spriteName, update){
+    var game = window.arc.game;
+    Phaser.Sprite.call(this, game, position.x, position.y, spriteName);
     this.anchor.setTo(0.5, 0.5);
 
     if (update !== undefined) {
