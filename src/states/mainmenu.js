@@ -4,11 +4,11 @@ var TEXT_TITLE = "Airship Recovery Co.";
 var TEXT_START_BUTTON = "Start Game";
 var TEXT_HOW_TO_PLAY = "How To Play";
 
-var mainmenu = function(game) {
+var state = function() {
 
 };
 
-mainmenu.prototype = {
+state.prototype = {
     create: function() {
         // Menu label
         var menuLabel = game.add.text(game.world.width / 2, 100, TEXT_TITLE, { font: '30px Arial', fill: '#fff' });
@@ -46,4 +46,4 @@ mainmenu.prototype = {
     }
 };
 
-module.exports = mainmenu;
+module.exports = state;

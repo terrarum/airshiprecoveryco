@@ -7,7 +7,7 @@ var load = function(game) {
 load.prototype = {
     preload: function() {
         this.load.image("airship", "assets/images/airship.png");
-        this.load.image("airpad", "assets/images/airpad.png");
+        this.load.image("airfield", "assets/images/airfield.png");
         this.load.image("crate", "assets/images/crate.png");
 
         // Button bitmap data.
