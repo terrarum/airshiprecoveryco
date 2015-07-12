@@ -25,6 +25,10 @@ load.prototype = {
     },
     create: function() {
 
+        // Set the starting level.
+        window.arc.level = 1;
+        window.arc.levels = require("../levels");
+
         createLabelButton();
 
         this.state.start("MainMenu");

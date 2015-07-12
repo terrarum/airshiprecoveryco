@@ -1,6 +1,11 @@
 var utils = require("../utils");
 var Entity = require("./entity");
 
+var setup = function() {
+    this.game.physics.arcade.enable(this);
+    this.body.immovable = true;
+};
+
 module.exports = function(game) {
     var game = window.arc.game;
     var x = utils.getRandRange(50, game.world.width - 50);
@@ -8,5 +13,6 @@ module.exports = function(game) {
 
     var Airfield = new Entity(new Phaser.Point(x, y), "airfield");
 
+    setup.call(Airfield);
     return Airfield;
 };

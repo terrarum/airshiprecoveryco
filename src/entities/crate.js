@@ -9,14 +9,23 @@ var generateCratePosition = function() {
     var y = utils.getRandRange(100, game.world.height - 50);
 
     return new Phaser.Point(x, y);
-}
+};
 
-module.exports = function() {
-    var update = function() {
-        this.angle += 1;
-    };
+var setup = function() {
+    this.game.physics.arcade.enable(this);
+    this.body.immovable = true;
+};
 
-    var Crate = new Entity(generateCratePosition(), "crate", update);
+var update = function() {
+    this.angle += 1;
+};
 
+module.exports = function(crateData) {
+    var Crate = new Entity(generateCratePosition(), "crate", {
+        update: update
+    });
+    Crate.data = crateData;
+
+    setup.call(Crate);
     return Crate;
 };

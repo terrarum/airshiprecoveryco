@@ -100,39 +100,6 @@ function missPad(player, crate) {
     }
 }
 
-// Calculates the wind strength and direction.
-lifespan = 5000;
-
-function wind() {
-    // Update lifespan of wind.
-    lifespan -= game.time.physicsElapsedMS;
-
-    // Generate new wind.
-    if (lifespan <= 0) {
-        lifespan = getRandRange(1000, 10000)
-        player.body.gravity.x = getRandRange(-80, 80);
-        player.body.gravity.y = getRandRange(-80, 80);
-    }
-
-    // Draw wind indicator.
-    graphics.clear();
-    graphics.lineStyle(5, 0xffd900, 1);
-    graphics.beginFill(0xFFFF0B, 0.5);
-    graphics.drawCircle(750, 50, 84);
-    graphics.endFill();
-    graphics.beginFill(0xFF3300);
-    graphics.moveTo(750, 50);
-    graphics.lineTo(750 + player.body.gravity.x / 2, 50 + player.body.gravity.y / 2);
-    graphics.endFill();
-}
-
-function consumeFuel() {
-    //player.fuelCurrent -= player.fuelConsumptionRate / game.time.physicsElapsedMS;
-    //if (player.fuelCurrent < 0) player.fuelCurrent = 0;
-}
-
-var gameUpdate = require("./controllers/gameUpdate");
-
 var arc = function(game) {
 
 };
@@ -142,22 +109,6 @@ arc.prototype = {
         // World.
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        // Get starting point.
-        var startX = getRandRange(50, game.world.width - 50);
-        var startY = getRandRange(100, game.world.height - 50);
-
-        // Airpad.
-        airpad = game.add.sprite(0, 0, 'airpad');
-        airpad.x = startX;
-        airpad.y = startY;
-        airpad.anchor.setTo(0.5, 0.5);;
-        game.physics.arcade.enable(airpad);
-        airpad.body.immovable = true;
-
-        // Crate.
-        crate = game.add.sprite(200, 200, 'crate');
-        game.physics.arcade.enable(crate);
-        crate.body.immovable = true;
 
         // Player.
         player = game.add.sprite(0, 0, 'airship');
@@ -173,11 +124,6 @@ arc.prototype = {
         playerBar = game.add.sprite(0, 0, bmd);
         playerBar.anchor.setTo(0.5, 0.5);
         playerBar.exists = false;
-        // Player fuel.
-        player.fuelCapacity = 1000;
-        player.fuelCurrent = player.fuelCapacity;
-        player.fuelConsumptionRate = 100; // units per second?
-        player.fuelRefuelRate = 400;
 
         scoreText = game.add.text(16, 16, 'Crates Collected: 0', {fontSize: '20px', fill: '#fff'});
 
@@ -205,60 +151,6 @@ arc.prototype = {
         }
         else if (!hitLandingPad && carryingCrate) {
             missPad();
-        }
-
-        var velocity = player.body.velocity;
-
-        cursors = game.input.keyboard.createCursorKeys();
-
-        var moveRate = 2;
-
-        // Slow airship down.
-        //if (velocity.x > 0) {
-        //    velocity.x -= moveRate / 4;
-        //}
-        //if (velocity.x < 0) {
-        //    velocity.x += moveRate / 4;
-        //}
-        //if (velocity.y > 0) {
-        //    velocity.y -= moveRate / 4;
-        //}
-        //if (velocity.y < 0) {
-        //    velocity.y += moveRate / 4;
-        //}
-
-        // Set maximum velocity.
-        if (velocity.x > MAX_VELOCITY + player.body.gravity.x) {
-            velocity.x = MAX_VELOCITY + player.body.gravity.x;
-        }
-        if (velocity.x < -MAX_VELOCITY + player.body.gravity.x) {
-            velocity.x = -MAX_VELOCITY + player.body.gravity.x;
-        }
-        if (velocity.y > MAX_VELOCITY + player.body.gravity.y) {
-            velocity.y = MAX_VELOCITY + player.body.gravity.y;
-        }
-        if (velocity.y < -MAX_VELOCITY + player.body.gravity.y) {
-            velocity.y = -MAX_VELOCITY + player.body.gravity.y;
-        }
-
-        // Move airship with arrow keys.
-        if (player.fuelCurrent > 0) {
-            if (cursors.up.isDown) {
-                consumeFuel();
-                velocity.y -= moveRate;
-            }
-            if (cursors.down.isDown) {
-                consumeFuel();
-                velocity.y += moveRate;
-            }
-            if (cursors.left.isDown) {
-                consumeFuel();
-                velocity.x -= moveRate;
-            }
-            if (cursors.right.isDown) {
-                consumeFuel();
-                velocity.x += moveRate;
-            }
         }
 
         var absVelX = Math.abs(velocity.x);
