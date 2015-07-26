@@ -43,6 +43,7 @@ var completeTime;
 var collectUpdate = function() {
 
 };
+
 // Handle collection of the crate.
 var collectCrate = function(player, crate) {
     if (player.model.isFirstCollide) {
@@ -60,9 +61,24 @@ var collectCrate = function(player, crate) {
     }
 };
 
+// Drop crate off at airfield.
+var depositCrate = function(player, airfield) {
+    if (player.model.isFirstCollide) {
+        hitTime = Date.now();
+        completeTime = hitTime + player.model.dropTime;
+        player.model.isFirstCollide = false;
+    }
+
+    collectUpdate();
+
+    if (Date.now() >= completeTime) {
+        console.log("crate drop");
+        player.model.carryingCrate = false;
+    }
+}
+
 // If the Airship drifts off a crate or the airfield, reset everything.
 var didMiss = function() {
-
     this.model.isFirstCollide = true;
 };
 
@@ -72,6 +88,7 @@ var setup = function() {
     this.model = playerModel;
     this.body.collideWorldBounds = true;
     this.collectCrate = collectCrate;
+    this.depositCrate = depositCrate;
     this.didMiss = didMiss;
 
     cursors = this.game.input.keyboard.createCursorKeys();

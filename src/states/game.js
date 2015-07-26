@@ -43,15 +43,18 @@ state.prototype = {
     update: function() {
         var player = window.arc.player;
         // Adjust the wind affecting the player.
-        wind();
+        //wind();
 
         // Handle crate and airfield collisions.
 
-        // If ready to collide with the airfiel.
+        // If ready to collide with the airfield.
         if (player.model.carryingCrate) {
-
+            var didHit = this.game.physics.arcade.overlap(player, window.arc.airfield, window.arc.player.depositCrate, null, this);
+            if (!didHit && !player.model.isFirstCollide) {
+                player.didMiss();
+            }
         }
-        // If ready to collide with a create
+        // If ready to collide with a crate.
         else {
             var didHit = this.game.physics.arcade.overlap(player, crates, window.arc.player.collectCrate, null, this);
             if (!didHit && !player.model.isFirstCollide) {
