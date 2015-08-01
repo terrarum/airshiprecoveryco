@@ -1,5 +1,5 @@
 var utils = require("../utils");
-var Entity = require("./entity");
+var Entity = require("./Entity");
 
 var setup = function() {
     this.game.physics.arcade.enable(this);

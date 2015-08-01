@@ -19,24 +19,24 @@ var progressStartTime;
 var completeTime;
 var maxWidth = 100;
 
-function playerBarShow(startTime, count) {
+function playerBarShow(startTime, endTime) {
     playerBar.exists = true;
     maxWidth = playerBar.width;
     progressStartTime = startTime;
-    completeTime = startTime + count;
+    completeTime = startTime + endTime;
 }
 
-function playerBarUpdate(count) {
+function playerBarUpdate(endTime) {
     if (absVelC >= VELOCITY_TOLERANCE) {
 
-        count += game.time.physicsElapsedMS;
+        endTime += game.time.physicsElapsedMS;
         // Holds the progress bar.
         completeTime += game.time.physicsElapsedMS;
         return;
     }
-    var width = playerBar.width;
+
     var remaining = completeTime - Date.now();
-    var percent = remaining / count;
+    var percent = remaining / endTime;
     if (percent < 0) percent = 0;
     playerBar.width = maxWidth * percent;
 }
@@ -121,9 +121,9 @@ arc.prototype = {
         bmd = game.add.bitmapData(100, 5);
         bmd.ctx.fillStyle = '#ffffff';
         bmd.ctx.fillRect(0, 0, 100, 5)
-        playerBar = game.add.sprite(0, 0, bmd);
-        playerBar.anchor.setTo(0.5, 0.5);
-        playerBar.exists = false;
+        //playerBar = game.add.sprite(0, 0, bmd);
+        //playerBar.anchor.setTo(0.5, 0.5);
+        //playerBar.exists = false;
 
         scoreText = game.add.text(16, 16, 'Crates Collected: 0', {fontSize: '20px', fill: '#fff'});
 
@@ -132,8 +132,8 @@ arc.prototype = {
     update: function() {
         wind();
 
-        playerBar.x = player.x;
-        playerBar.y = player.y + 50;
+        //playerBar.x = player.x;
+        //playerBar.y = player.y + 50;
 
         // See if airship is over crate.
         var didHitCrate = game.physics.arcade.overlap(player, crate, null, null, this);

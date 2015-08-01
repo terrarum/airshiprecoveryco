@@ -1,18 +1,15 @@
+// Initialise Phaser.
 window.arc = {
     game: new Phaser.Game(800, 600, Phaser.AUTO, 'game')
 };
-
-var load = require("./states/load");
-var mainMenu = require("./states/mainmenu");
-var howToPlay = require("./states/howtoplay");
-var gameState = require("./states/game");
-var shop = require("./states/shop");
-
 var game = window.arc.game;
 
-game.state.add("Load", load);
-game.state.add("MainMenu", mainMenu);
-game.state.add("HowToPlay", howToPlay);
-game.state.add("Game", gameState);
-game.state.add("Shop", shop);
+// Set up game states.
+game.state.add("Load", require("./states/load"));
+game.state.add("MainMenu", require("./states/mainmenu"));
+game.state.add("HowToPlay", require("./states/howtoplay"));
+game.state.add("Game", require("./states/game"));
+game.state.add("Shop", require("./states/shop"));
+
+// Initialise loading state.
 game.state.start("Load");

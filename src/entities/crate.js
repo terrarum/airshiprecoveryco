@@ -1,5 +1,5 @@
 var utils = require("../utils");
-var Entity = require("./entity");
+var Entity = require("./Entity");
 
 // Generates X and Y coordinates for the crate. Will later need to account
 // for Airfield position to ensure there are no overlaps.
