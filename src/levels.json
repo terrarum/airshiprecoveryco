@@ -1,0 +1,28 @@
+[
+    {
+        "crates": [
+            {
+                "contents": "bits and bobs",
+                "value": 50
+            },
+            {
+                "contents": "whirligigs",
+                "value": 50
+            }
+        ],
+        "windMaxStrength": 40
+    },
+    {
+        "crates": [
+            {
+                "name": "an elephant",
+                "value": 50
+            },
+            {
+                "name": "cogs",
+                "value": 100
+            }
+        ],
+        "windMaxStrength": 50
+    }
+]

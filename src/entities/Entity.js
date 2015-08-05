@@ -3,7 +3,7 @@
  */
 
 var Entity = function(position, spriteName, functions){
-    var game = window.arc.game;
+    var game = arc.game;
 
     // If Phaser functions are passed in, apply them to entity.
     if (functions !== undefined) {

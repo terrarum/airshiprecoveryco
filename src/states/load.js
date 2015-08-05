@@ -1,4 +1,5 @@
-var game = window.arc.game;
+var game = arc.game;
+var playerModel = require("../models/player");
 
 var createLabelButton = function() {
     window.LabelButton = function(game, x, y, key, label, labelStyle, callback,
@@ -52,12 +53,17 @@ load.prototype = {
         buttonBmd.ctx.fillStyle = '#999999';
         buttonBmd.ctx.fillRect(450, 0, buttonWidth / 4, 40);
         this.load.spritesheet("button-start", buttonBmd.canvas.toDataURL(), buttonWidth / 4, 40);
+
+        // Load level data.
+        this.load.text("levels", "/src/levels.json");
     },
     create: function() {
 
         // Set the starting level.
-        window.arc.level = 1;
-        window.arc.levels = require("../levels");
+        arc.level = 1;
+        arc.levels = JSON.parse(this.game.cache.getText("levels"));
+
+        arc.playerData = playerModel;
 
         createLabelButton();
 

@@ -1,8 +1,8 @@
 // Initialise Phaser.
-window.arc = {
+arc = {
     game: new Phaser.Game(800, 600, Phaser.AUTO, 'game')
 };
-var game = window.arc.game;
+var game = arc.game;
 
 // Set up game states.
 game.state.add("Load", require("./states/load"));

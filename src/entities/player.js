@@ -75,8 +75,10 @@ var collectCrate = function(player, crate) {
     collectUpdate.call(player);
 
     if (Date.now() >= completeTime) {
-        console.log("crate get");
         player.model.carryingCrate = true;
+
+        arc.playerData.money = parseInt(arc.playerData.money) + parseInt(crate.data.value);
+
         crate.kill();
 
         player.progressBar.hide();

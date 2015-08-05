@@ -7,7 +7,7 @@ var setup = function() {
 };
 
 module.exports = function(game) {
-    var game = window.arc.game;
+    var game = arc.game;
     var x = utils.getRandRange(50, game.world.width - 50);
     var y = utils.getRandRange(100, game.world.height - 50);
 

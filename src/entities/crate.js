@@ -4,7 +4,7 @@ var Entity = require("./Entity");
 // Generates X and Y coordinates for the crate. Will later need to account
 // for Airfield position to ensure there are no overlaps.
 var generateCratePosition = function() {
-    var game = window.arc.game;
+    var game = arc.game;
     var x = utils.getRandRange(50, game.world.width - 50);
     var y = utils.getRandRange(100, game.world.height - 50);
 

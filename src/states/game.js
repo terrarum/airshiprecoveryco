@@ -4,16 +4,36 @@ var Crate = require("../entities/crate");
 
 var utils = require("../utils");
 
+var windChangeRate = 0.1;
 var lifeSpan = 5000;
-var wind = function() {
+var newX = 0;
+var newY = 0;
+var wind = function(levelData) {
+    var maxWindSpeed = parseInt(levelData.windMaxStrength);
+
     // Update lifespan of wind.
-    lifeSpan -= window.arc.game.time.physicsElapsedMS;
+    lifeSpan -= arc.game.time.physicsElapsedMS;
+
+    if (arc.player.body.gravity.x > newX) {
+        arc.player.body.gravity.x -= windChangeRate;
+    }
+    if (arc.player.body.gravity.x < newX) {
+        arc.player.body.gravity.x += windChangeRate;
+    }
+
+    if (arc.player.body.gravity.y > newY) {
+        arc.player.body.gravity.y -= windChangeRate;
+    }
+    if (arc.player.body.gravity.y < newY) {
+        arc.player.body.gravity.y += windChangeRate;
+    }
 
     // Generate new wind.
     if (lifeSpan <= 0) {
-        lifeSpan = utils.getRandRange(1000, 10000)
-        window.arc.player.body.gravity.x = utils.getRandRange(-80, 80);
-        window.arc.player.body.gravity.y = utils.getRandRange(-80, 80);
+        lifeSpan = utils.getRandRange(1000, 10000);
+
+        newX = utils.getRandRange(-maxWindSpeed, maxWindSpeed);
+        newY = utils.getRandRange(-maxWindSpeed, maxWindSpeed);
     }
 };
 
@@ -23,40 +43,52 @@ state.prototype = {
     create: function() {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        var levelData = window.arc.levels[window.arc.level - 1];
+        this.levelData = arc.levels[arc.level - 1];
 
         // Create airfield.
-        window.arc.airfield = new Airfield();
+        arc.airfield = new Airfield();
 
         // Create crates.
-        window.arc.crates = [];
+        arc.crates = [];
         crates = this.game.add.group();
-        utils.iterate(levelData.crates, function(crateData) {
+        utils.iterate(this.levelData.crates, function(crateData) {
             var crate = new Crate(crateData);
             crates.add(crate);
-            window.arc.crates.push(crate);
+            arc.crates.push(crate);
         });
 
+        var textStyle = {font:"normal 20px arial",fill: "#ffffff"};
+        moneyText = this.game.add.text(0, 0, "", textStyle);
+        carryingText = this.game.add.text(250, 0, "", textStyle);
+
         // Create player.
-        window.arc.player = new Player(window.arc.airfield.position);
+        arc.player = new Player(arc.airfield.position);
     },
     update: function() {
-        var player = window.arc.player;
+        var player = arc.player;
         // Adjust the wind affecting the player.
-        //wind();
+        wind(this.levelData);
+
+        moneyText.setText("Money: $" + arc.playerData.money);
+        if (arc.player.model.carryingCrate) {
+            carryingText.setText("Return Crate to Airfield.");
+        }
+        else {
+            carryingText.setText("Pick up a Crate.");
+        }
 
         // Handle crate and airfield collisions.
 
         // If ready to collide with the airfield.
         if (player.model.carryingCrate) {
-            var didHit = this.game.physics.arcade.overlap(player, window.arc.airfield, window.arc.player.depositCrate, null, this);
+            var didHit = this.game.physics.arcade.overlap(player, arc.airfield, arc.player.depositCrate, null, this);
             if (!didHit && !player.model.isFirstCollide) {
                 player.didMiss();
             }
         }
         // If ready to collide with a crate.
         else {
-            var didHit = this.game.physics.arcade.overlap(player, crates, window.arc.player.collectCrate, null, this);
+            var didHit = this.game.physics.arcade.overlap(player, crates, arc.player.collectCrate, null, this);
             if (!didHit && !player.model.isFirstCollide) {
                 player.didMiss();
             }

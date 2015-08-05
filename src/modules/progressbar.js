@@ -15,13 +15,12 @@ var progressUpdate = function(lastHitTime, completeTime) {
 };
 
 var hideBar = function() {
-    console.log("hide");
     this.exists = false;
 };
 
 var createProgressBar = function(options) {
 
-    var game = window.arc.game;
+    var game = arc.game;
 
     if (options == undefined) {
         options == {}

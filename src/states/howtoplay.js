@@ -1,4 +1,4 @@
-var game = window.arc.game;
+var game = arc.game;
 
 var TEXT_TITLE = "Airship Recovery Co.";
 var TEXT_START_BUTTON = "Start Game";
