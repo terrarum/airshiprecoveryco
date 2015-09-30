@@ -41,6 +41,7 @@ load.prototype = {
         this.load.image("airfield", "/assets/images/airfield.png");
         this.load.image("crate", "/assets/images/crate.png");
         this.load.image("directionindicator", "/assets/images/directionindicator.png");
+        this.load.image("weathervane", "/assets/images/weathervane.png");
 
         // Button bitmap data.
         var buttonWidth = 600;
@@ -63,6 +64,12 @@ load.prototype = {
         // Set the starting level.
         arc.level = 1;
         arc.levels = JSON.parse(this.game.cache.getText("levels"));
+
+        arc.wind = {
+            x: 0,
+            y: 0,
+            max: 0
+        };
 
         arc.playerData = playerModel;
 

@@ -76,7 +76,6 @@ var collectCrate = function(sprite1, sprite2) {
 
     if (player.model.currentCrateId !== null &&
         player.model.currentCrateId !== crate.id) {
-        console.log("Not the same crate");
         return
     };
 
@@ -122,7 +121,6 @@ var depositCrate = function(player, airfield) {
 
     // Crate is dropped off.
     if (Date.now() >= completeTime) {
-        console.log("crate drop");
         player.model.carryingCrate = false;
 
         arc.playerData.money = parseInt(arc.playerData.money) + parseInt(player.crateValue);

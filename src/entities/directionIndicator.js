@@ -19,9 +19,7 @@ module.exports = function(player, crate) {
         var distY = this.y - crate.y;
         var distX = this.x - crate.x;
 
-        var newAngle = Phaser.Math.radToDeg(Math.atan2(distY, distX));
-
-        this.angle = newAngle;
+        this.angle = Phaser.Math.radToDeg(Math.atan2(distY, distX));
     };
 
     playerRef = player;
