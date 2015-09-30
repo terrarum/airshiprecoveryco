@@ -14,6 +14,7 @@ var generateCratePosition = function() {
 var setup = function() {
     this.game.physics.arcade.enable(this);
     this.body.immovable = true;
+    this.id = Math.random().toString();
 };
 
 var update = function() {

@@ -62,22 +62,43 @@ var collectUpdate = function() {
 };
 
 // Handle collection of the crate.
-var collectCrate = function(player, crate) {
+var collectCrate = function(sprite1, sprite2) {
+    var player, crate;
+
+    if (sprite1.key === "airship") {
+        player = sprite1;
+        crate = sprite2;
+    }
+    else {
+        player = sprite2;
+        crate = sprite1;
+    }
+
+    if (player.model.currentCrateId !== null &&
+        player.model.currentCrateId !== crate.id) {
+        console.log("Not the same crate");
+        return
+    };
+
+    // Begin crate collection.
     if (player.model.isFirstCollide) {
         hitTime = Date.now();
         completeTime = hitTime + player.model.collectTime;
         lastHitTime = hitTime;
         player.model.isFirstCollide = false;
+        player.model.currentCrateId = crate.id;
 
         player.progressBar.show(hitTime, completeTime);
     }
 
     collectUpdate.call(player);
 
+    // Crate is collected.
     if (Date.now() >= completeTime) {
         player.model.carryingCrate = true;
 
-        arc.playerData.money = parseInt(arc.playerData.money) + parseInt(crate.data.value);
+        player.crateValue = crate.data.value;
+        player.model.currentCrateId = null;
 
         crate.kill();
 
@@ -87,6 +108,7 @@ var collectCrate = function(player, crate) {
 
 // Drop crate off at airfield.
 var depositCrate = function(player, airfield) {
+    // Being crate dropoff.
     if (player.model.isFirstCollide) {
         hitTime = Date.now();
         completeTime = hitTime + player.model.dropTime;
@@ -98,9 +120,13 @@ var depositCrate = function(player, airfield) {
 
     collectUpdate.call(player);
 
+    // Crate is dropped off.
     if (Date.now() >= completeTime) {
         console.log("crate drop");
         player.model.carryingCrate = false;
+
+        arc.playerData.money = parseInt(arc.playerData.money) + parseInt(player.crateValue);
+        player.crateValue = 0;
 
         player.progressBar.hide();
     }
@@ -110,6 +136,7 @@ var depositCrate = function(player, airfield) {
 var didMiss = function() {
     this.model.isFirstCollide = true;
     this.progressBar.hide();
+    this.model.currentCrateId = null;
 };
 
 // Set up some properties of the Player entity.

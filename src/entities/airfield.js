@@ -1,4 +1,3 @@
-var utils = require("../utils");
 var Entity = require("./Entity");
 
 var setup = function() {
@@ -8,10 +7,11 @@ var setup = function() {
 
 module.exports = function(game) {
     var game = arc.game;
-    var x = utils.getRandRange(50, game.world.width - 50);
-    var y = utils.getRandRange(100, game.world.height - 50);
 
-    var Airfield = new Entity(new Phaser.Point(x, y), "airfield");
+    var Airfield = new Entity(new Phaser.Point(0, 0), "airfield");
+
+    Airfield.x = game.world.width / 2;
+    Airfield.y = game.world.height - Airfield.height * 1;
 
     setup.call(Airfield);
     return Airfield;

@@ -17,7 +17,7 @@ var createLabelButton = function() {
         this.setLabel(label);
 
         //adds button to game
-        game.add.existing( this );
+        game.add.existing(this);
     };
 
     LabelButton.prototype = Object.create(Phaser.Button.prototype);
@@ -40,6 +40,7 @@ load.prototype = {
         this.load.image("airship", "/assets/images/airship.png");
         this.load.image("airfield", "/assets/images/airfield.png");
         this.load.image("crate", "/assets/images/crate.png");
+        this.load.image("directionindicator", "/assets/images/directionindicator.png");
 
         // Button bitmap data.
         var buttonWidth = 600;

@@ -1,6 +1,7 @@
 var Player = require("../entities/player");
 var Airfield = require("../entities/airfield");
 var Crate = require("../entities/crate");
+var DirectionIndicator = require("../entities/directionIndicator");
 
 var utils = require("../utils");
 
@@ -46,23 +47,25 @@ state.prototype = {
         this.levelData = arc.levels[arc.level - 1];
 
         // Create airfield.
-        arc.airfield = new Airfield();
+        arc.airfield = new Airfield()
+
+        // Create player.
+        arc.player = new Player(arc.airfield.position);;
 
         // Create crates.
         arc.crates = [];
+        arc.indicators = [];
         crates = this.game.add.group();
         utils.iterate(this.levelData.crates, function(crateData) {
             var crate = new Crate(crateData);
             crates.add(crate);
             arc.crates.push(crate);
+            arc.indicators.push(new DirectionIndicator(arc.player, crate));
         });
 
         var textStyle = {font:"normal 20px arial",fill: "#ffffff"};
         moneyText = this.game.add.text(0, 0, "", textStyle);
         carryingText = this.game.add.text(250, 0, "", textStyle);
-
-        // Create player.
-        arc.player = new Player(arc.airfield.position);
     },
     update: function() {
         var player = arc.player;
