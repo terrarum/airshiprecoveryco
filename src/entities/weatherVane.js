@@ -10,11 +10,20 @@ calculateWindDirection = function() {
     // Get magnitude.
     if (arc.upgrades.weathervane.upgrades.strength.purchased) {
         // Calculate magnitude.
+
+        // Get percentage of distance to max wind.
+
+        // Convert into percentage of distance of wather vane radius.
         magnitude = 10;
     }
     else {
         // Default magnitude.
-        magnitude = this.width / 4;
+        if (arc.wind.y === 0 && arc.wind.x === 0) {
+            magnitude = 0;
+        }
+        else {
+            magnitude = this.width / 4;
+        }
     };
 
     var xEnd = this.x + magnitude * Math.cos(angle);
