@@ -1,5 +1,3 @@
-
-
 module.exports = function() {
     return {
         weathervane: {
@@ -12,7 +10,7 @@ module.exports = function() {
                     name: "Wind Strength",
                     description: "Shows the strength as well the direction of the wind.",
                     cost: 50,
-                    purchased: false
+                    purchased: true
                 }
             }
         }

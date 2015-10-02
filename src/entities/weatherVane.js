@@ -1,7 +1,8 @@
 var utils = require("../utils");
 var Entity = require("./Entity");
 
-var angle, magnitude, xEnd, yEnd, g;
+var angle, magnitude, magHypo, xEnd, yEnd, g, windX, windY,
+    lengthMax = Math.sqrt(Math.pow(1, 2) + Math.pow(1, 2));
 
 calculateWindDirection = function() {
     // Get angle of wind.
@@ -9,29 +10,26 @@ calculateWindDirection = function() {
 
     // Get magnitude.
     if (arc.upgrades.weathervane.upgrades.strength.purchased) {
-        // Calculate magnitude.
 
-        // Get percentage of distance to max wind.
+        windX = Math.abs(arc.wind.x) / arc.wind.max;
+        windY = Math.abs(arc.wind.y) / arc.wind.max;
 
-        // Convert into percentage of distance of wather vane radius.
-        magnitude = 10;
+        magHypo = Math.sqrt(Math.pow(windY, 2) + Math.pow(windX, 2));
+
+        magnitude = (magHypo / lengthMax) * (this.width / 2);
     }
     else {
-        // Default magnitude.
-        if (arc.wind.y === 0 && arc.wind.x === 0) {
-            magnitude = 0;
-        }
-        else {
-            magnitude = this.width / 4;
-        }
-    };
+        magnitude = this.width / 4;
+    }
 
-    var xEnd = this.x + magnitude * Math.cos(angle);
-    var yEnd = this.y + magnitude * Math.sin(angle);
+    xEnd = this.x + magnitude * Math.cos(angle);
+    yEnd = this.y + magnitude * Math.sin(angle);
 
-    var line = new Phaser.Line(this.x, this.y, xEnd, yEnd);
-    arc.game.debug.lineInfo(line, 10, 60);
-    arc.game.debug.geom(line);
+    g.clear();
+    g.lineStyle(2, 0xffffff, 1);
+    g.moveTo(this.x, this.y);
+    g.lineTo(xEnd, yEnd);
+
 };
 
 module.exports = function() {

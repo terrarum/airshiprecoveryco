@@ -20,3 +20,8 @@ x    Airship has pointers to crates when not full.
 * Wind strength
 * Wind change timer
 
+# Notes
+
+Math.abs(x) wind value.
+Get percentage of distance to wind max value.
+do same for y
